@@ -1,8 +1,11 @@
 import {ProjectsInterface} from "../src";
 import {ModuleFactory} from "../src/module-factory";
+import * as process from "process";
 
 describe('Dynamic Modules', () => {
     let service: ProjectsInterface;
+
+    console.log(process.argv);
 
     // eslint-disable-next-line require-await
     beforeAll(async () => {

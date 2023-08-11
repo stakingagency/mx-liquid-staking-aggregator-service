@@ -1,12 +1,8 @@
 import {Module} from '@nestjs/common';
-import { DummyService, ProjectsInterface} from "../projects";
+import {  ProjectsInterface} from "../projects";
 
 @Module({})
 export class ModuleFactory {
-
-    providers = [
-        DummyService,
-    ];
     static async create(moduleName: string): Promise<ProjectsInterface> {
         const importedModule = await import(`../projects/${moduleName}/${moduleName}.module`);
         const className = Object.keys(importedModule).find(name => /Module$/.test(name));
