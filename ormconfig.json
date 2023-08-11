@@ -1,0 +1,19 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5431,
+    "database": "timescaledb",
+    "username": "timescaledb",
+    "password": "password",
+    "keepConnectionAlive": true,
+    "synchronize": false,
+    "entities": [
+      "dist/**/*.entity{.ts,.js}",
+      "dist/**/timescale.entities{.ts,.js}"
+    ],
+    "migrations": ["libs/timescaledb/src/migrations/*.ts"],
+    "cli": {
+      "migrationsDir": "libs/timescaledb/src/migrations"
+    }
+  }
+  
