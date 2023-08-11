@@ -35,7 +35,7 @@ The project's structure is crucial for maintaining order, readability, and scala
 To run the tests for a specific module from `package.json`, use the following command:
 
 ```bash
-npm test -- MODULE_NAME=YourModuleName
+ npm run test:module --module=YOUR_MODULE_NAME
 ```
 
-Ensure that you replace `YourModuleName` with the name of your module. Keep in mind that most module names begin with an uppercase letter.
+Ensure that you replace `YOUR_MODULE_NAME` with the name of your module. Keep in mind that most module names begin with an uppercase letter.
