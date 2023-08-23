@@ -1,26 +1,20 @@
-import {Module} from '@nestjs/common';
-import {  ProjectsInterface} from "../projects";
+import { Module } from '@nestjs/common';
+import { ProjectsInterface} from "../../../projects";
+import { AvailableProjects } from "../../../projects";
 
 @Module({})
 export class ModuleFactory {
-    static async create(moduleName: string): Promise<ProjectsInterface> {
-        const importedModule = await import(`../projects/${moduleName}/${moduleName}.module`);
-        const className = Object.keys(importedModule).find(name => /Module$/.test(name));
-        if (className) {
-            return new importedModule[className]();
+    static rootPath = '../../../projects';
+    static getService(projectName: AvailableProjects): ProjectsInterface {
+        if(!projectName) throw new Error(`Project name is required.`);
+        if(!Object.values(AvailableProjects).includes(projectName)) throw new Error(`Project ${projectName} not found, check that projectName is added in AvailableProjects.`);
+        const serviceName=`${projectName.charAt(0).toUpperCase() + projectName.slice(1)}Service`;
+        const services = require(`${this.rootPath}/${projectName}/${projectName}.service`);
+
+        if (services && services[`${serviceName}`]) {
+            const ServiceClass = services[`${serviceName}`];
+            return new ServiceClass();
         }
-        throw new Error('Module not found or incorrectly structured.');
+        throw new Error(`Service ${serviceName} not found.`);
     }
-
-    static getService(moduleName: string): ProjectsInterface {
-        const services = require(`../projects/${moduleName}/${moduleName}.service`);
-
-        if (services && services[`${moduleName}Service`]) {
-            const ServiceClass = services[`${moduleName}Service`];
-            return new ServiceClass();  // instantiate the service class
-        }
-
-        throw new Error(`Service ${moduleName}Service not found. Check if it's exported correctly from ${moduleName}.service.ts.`);
-    }
-
 }

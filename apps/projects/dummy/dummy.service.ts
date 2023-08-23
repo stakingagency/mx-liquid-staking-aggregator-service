@@ -3,8 +3,7 @@ import {ProjectsInterface} from "../projects.interface";
 
 @Injectable()
 export class DummyService implements ProjectsInterface {
-    constructor() {
-    }
+    constructor() {}
     public getAddressStake(address: string): Promise<{ stake: string }> {
         console.log(address);
         return Promise.resolve({stake: ""});

@@ -39,33 +39,6 @@
             "tsConfigPath": "apps/aggregator/tsconfig.app.json"
         }
     },
-    "api": {
-      "type": "application",
-      "root": "apps/api",
-      "entryFile": "main",
-      "sourceRoot": "apps/api/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/api/tsconfig.app.json"
-      }
-    },
-    "ingester": {
-      "type": "application",
-      "root": "apps/ingester",
-      "entryFile": "main",
-      "sourceRoot": "apps/ingester/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/ingester/tsconfig.app.json"
-      }
-    },
-    "indexer": {
-      "type": "application",
-      "root": "apps/indexer",
-      "entryFile": "main",
-      "sourceRoot": "apps/indexer/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/indexer/tsconfig.app.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -73,24 +46,6 @@
       "sourceRoot": "libs/common/src",
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
-      }
-    },
-    "core": {
-      "type": "library",
-      "root": "libs/core",
-      "entryFile": "index",
-      "sourceRoot": "libs/core/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/core/tsconfig.lib.json"
-      }
-    },
-    "timescaledb": {
-      "type": "library",
-      "root": "libs/timescaledb",
-      "entryFile": "index",
-      "sourceRoot": "libs/timescaledb/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/timescaledb/tsconfig.lib.json"
       }
     }
   }

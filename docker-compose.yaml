@@ -7,18 +7,3 @@ services:
       - 6384:6379
     environment:
       - REDIS_REPLICATION_MODE=master
-
-  timescaledb:
-    image: timescale/timescaledb:latest-pg12
-    restart: always
-    shm_size: 1gb
-    ports:
-      - 5431:5432
-    environment:
-      POSTGRES_USER: timescaledb
-      POSTGRES_PASSWORD: password
-    volumes:
-      - timescaledb:/var/lib/postgresql/data
-
-volumes:
-  timescaledb:

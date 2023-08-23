@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NetworkType } from '../../entities';
-import { Exchange } from '../exchanges';
 
 @Injectable()
 export class ApiConfigService implements ApiConfigService {
@@ -17,20 +16,9 @@ export class ApiConfigService implements ApiConfigService {
     return this.getGenericConfig('apps.api.port');
   }
 
-  getAggregator(): number {
-    return this.getGenericConfig('apps.aggregator.port');
-  }
 
   getApiPrefix(): string {
     return this.getGenericConfig('apps.api.prefix');
-  }
-
-  getIngestersPort(): number {
-    return this.getGenericConfig('apps.ingesters.port');
-  }
-
-  getIndexerPort(): number {
-    return this.getGenericConfig('apps.indexer.port');
   }
 
   getRedisUrl(): string {
@@ -61,23 +49,6 @@ export class ApiConfigService implements ApiConfigService {
     return this.getGenericConfig('slack.webhookUrl', { defaultValue: null });
   }
 
-  getTimescaleConnection(): {
-    host: string;
-    port: number;
-    username: string;
-    password: string;
-    database: string;
-    poolSize: number;
-  } {
-    return {
-      host: this.getTimescaleHost(),
-      port: this.getTimescalePort(),
-      database: this.getTimescaleDatabase(),
-      username: this.getTimescaleUsername(),
-      password: this.getTimescalePassword(),
-      poolSize: this.getGenericConfig('timescale.poolSize', { defaultValue: 4 }),
-    };
-  }
 
   getElasticUrl(): string {
     return this.getGenericConfig('urls.elastic');
@@ -91,40 +62,8 @@ export class ApiConfigService implements ApiConfigService {
     return this.getGenericConfig('urls.api');
   }
 
-  getDataApi(): string {
-    return this.getGenericConfig('urls.dataApi');
-  }
-
-  getExchanges(): Exchange[] {
-    return this.config.get<Exchange[]>('exchanges') ?? [];
-  }
-
   getGatewayUrl(): string {
     return this.getGenericConfig('urls.gateway');
-  }
-
-  getLightGatewayUrl(): string | undefined {
-    return this.getGenericConfig('urls.lightGateway');
-  }
-
-  getTimescaleHost(): string {
-    return this.getGenericConfig('timescale.host');
-  }
-
-  getTimescaleUsername(): string {
-    return this.getGenericConfig('timescale.username');
-  }
-
-  getTimescalePassword(): string {
-    return this.getGenericConfig('timescale.password');
-  }
-
-  getTimescaleDatabase(): string {
-    return this.getGenericConfig('timescale.database');
-  }
-
-  getTimescalePort(): number {
-    return this.getGenericConfig('timescale.port');
   }
 
   getGenericConfig<T>(key: string, options?: { defaultValue: T }): T {
