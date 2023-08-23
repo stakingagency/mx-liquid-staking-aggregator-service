@@ -1,13 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/api/src",
+  "sourceRoot": "apps/aggregator/src",
   "compilerOptions": {
     "webpack": false,
     "plugins": [
       "@nestjs/swagger"
     ],
-    "tsConfigPath": "apps/api/tsconfig.app.json",
+    "tsConfigPath": "apps/aggregator/tsconfig.app.json",
     "assets": [
       {
         "include": "../config/config.yaml",
@@ -28,7 +28,7 @@
     ]
   },
   "monorepo": true,
-  "root": "apps/api",
+  "root": "apps/aggregator",
   "projects": {
     "aggregator": {
         "type": "application",

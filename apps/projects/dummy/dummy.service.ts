@@ -17,7 +17,7 @@ export class DummyService implements ProjectsInterface {
 
     public getStakingContracts(): Promise<string[]> {
         return Promise.resolve([
-            'erd1qqqqqqqqqqqqqpgqqgxy40dn5tx2dtg0z4jt0sl0zpqm0sca398sv4d50e'
+            'erd1qqqqqqqqqqqqqpgqqgxy40dn5tx2dtg0z4jt0sl0zpqm0sca398sv4d50e',
         ]);
     }
 
