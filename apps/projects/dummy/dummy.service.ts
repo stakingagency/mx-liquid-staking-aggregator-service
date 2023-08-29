@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import {ProjectsInterface} from "../projects.interface";
+import { ProjectsInterface } from "../projects.interface";
 
 @Injectable()
 export class DummyService implements ProjectsInterface {
-    constructor() {}
-    public getAddressStake(address: string): Promise<{ stake: string }> {
-        console.log(address);
-        return Promise.resolve({stake: ""});
+    constructor() { }
+    public getAddressStake(_address: string): Promise<{ stake: string }> {
+        return Promise.resolve({ stake: "" });
     }
 
     public getStakingAddresses(): Promise<string[]> {

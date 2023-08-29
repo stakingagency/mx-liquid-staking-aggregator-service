@@ -4,12 +4,12 @@ export interface ProjectsInterface {
      */
     getStakingContracts(): Promise<string[]>;
     /**
-     * Returns a list of addresses which holds liquid staking tokens
-     */
+    * Returns a list of addresses which holds liquid staking tokens
+    */
     getStakingAddresses(): Promise<string[]>;
     /**
      * Returns the amount of staked tokens for a given address
      * @param address The address to check
      */
-    getAddressStake(address: string): Promise<{ stake: string }>;
+    getAddressStake(address: string): Promise<{ stake: string } | null>;
 }
