@@ -1,12 +1,10 @@
-import { ProjectsInterface } from "../src";
-import { ModuleFactory } from "../src/module-factory";
 import * as process from "process";
-import { AvailableProjects } from "../../projects";
 import BigNumber from 'bignumber.js';
-import { ApiConfigService } from "@libs/common";
-import configuration from '../../../config/configuration';
-import { ConfigService } from "@nestjs/config";
+import { ApiConfigModule, ApiConfigService, DynamicModuleUtils } from "@libs/common";
+import { LiquidStakingProviders } from "../../providers";
+import parseArgs from 'minimist';
 const request = require('supertest');
+import { Test } from '@nestjs/testing';
 
 function isCloseTo(value1: number, value2: number, margin = 10) {
     const difference = Math.abs(value1 - value2);
@@ -15,18 +13,41 @@ function isCloseTo(value1: number, value2: number, margin = 10) {
 }
 
 describe('Projects service testing', () => {
-    const configService = new ConfigService(configuration());
-    const apiConfigService = new ApiConfigService(configService);
-
-    const ACCEPTABLE_PERCENTAGE_DIFFERENCE = apiConfigService.getTestConfigAcceptablePercentageDifference();
-    const API_SLEEP_TIME = apiConfigService.getTestConfigApiSleepTime();
-    const BATCH_API_REQUEST_SIZE = apiConfigService.getTestConfigBatchApiRequestSize();
-
-    const module: AvailableProjects = process.env.MODULE_NAME as AvailableProjects;
-    if (!module) throw new Error(`Module name is required.`);
-    const service: ProjectsInterface = ModuleFactory.getService(module);
-
     let batchIterations = 0;
+    let service: any;
+    let apiConfigService: ApiConfigService;
+
+    beforeAll(async () => {
+        const { provider } = parseArgs(process.argv);
+
+        if (!provider) {
+            throw new Error('Provide a provider name');
+        }
+
+        if (!Object.values(LiquidStakingProviders).includes(provider)) {
+            throw new Error(`Provider ${provider} was not found, check that your provider is added in the LiquidStakingProviders enum.`);
+        }
+
+        const serviceClasses = require(`../../providers/${provider}`);
+        const serviceClass = Object.values(serviceClasses)[0] as any;
+
+        const moduleRef = await Test.createTestingModule({
+            imports: [
+                ApiConfigModule,
+                DynamicModuleUtils.getApiModule(),
+                DynamicModuleUtils.getElasticModule(),
+            ],
+            providers: [
+                {
+                    provide: 'LIQUID_STAKING_SERVICE_PROVIDER',
+                    useClass: serviceClass,
+                },
+            ],
+        }).compile();
+
+        apiConfigService = moduleRef.get(ApiConfigService);
+        service = moduleRef.get('LIQUID_STAKING_SERVICE_PROVIDER');
+    });
 
     it('should be defined', () => {
         expect(service).toBeDefined();
@@ -55,6 +76,9 @@ describe('Projects service testing', () => {
     });
 
     it('should check the total staked amount is equal to the sum of all staking addresses', async () => {
+        const API_SLEEP_TIME = apiConfigService.getTestConfigApiSleepTime();
+        const BATCH_API_REQUEST_SIZE = apiConfigService.getTestConfigBatchApiRequestSize();
+
         const contractAddresses = await service.getStakingContracts();
         const stakingAddresses = await service.getStakingAddresses();
         let contractSum = new BigNumber(0);
@@ -86,6 +110,10 @@ describe('Projects service testing', () => {
             const denominatedAddressSum = addressSum.shiftedBy(-18).toNumber();
             console.log(`Contract sum: ${denominatedContractSum}`);
             console.log(`Address sum: ${denominatedAddressSum}`);
+            expect(denominatedContractSum).toBeGreaterThan(0);
+            expect(denominatedAddressSum).toBeGreaterThan(0);
+
+            const ACCEPTABLE_PERCENTAGE_DIFFERENCE = apiConfigService.getTestConfigAcceptablePercentageDifference();
             expect(isCloseTo(denominatedContractSum, denominatedAddressSum, ACCEPTABLE_PERCENTAGE_DIFFERENCE)).toBe(true);
         }
     }, 1000000);
