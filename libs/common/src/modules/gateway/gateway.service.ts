@@ -1,8 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ApiConfigService } from '../api-config';
 import { ApiService, ApiSettings } from '@multiversx/sdk-nestjs-http';
-import { LogPerformanceAsync } from '../../utils/decorators/log.performance.decorators';
-import { MetricsEvents } from '../../utils/metrics-events.constants';
+import {GatewayQueryBody} from "./entities/gateway.query.body";
 
 @Injectable()
 export class GatewayService {
@@ -12,7 +11,6 @@ export class GatewayService {
     private readonly apiService: ApiService,
   ) { }
 
-  @LogPerformanceAsync(MetricsEvents.SetGatewayDuration, { argIndex: 1 })
   async get(
     url: string,
     errorHandler?: (error: any) => Promise<boolean>,
@@ -21,7 +19,6 @@ export class GatewayService {
     return result?.data?.data;
   }
 
-  @LogPerformanceAsync(MetricsEvents.SetGatewayDuration, { argIndex: 1 })
   async getRaw(
     url: string,
     errorHandler?: (error: any) => Promise<boolean>,
@@ -30,6 +27,20 @@ export class GatewayService {
       `${this.apiConfigService.getGatewayUrl()}/${url}`,
       new ApiSettings(),
       errorHandler,
+    );
+  }
+
+  async query(data: GatewayQueryBody, errorHandler?: (error: any) => Promise<boolean>,): Promise<any> {
+    const result = await this.queryRaw(data, errorHandler);
+    return result?.data?.data?.data;
+  }
+
+  private async queryRaw(data: GatewayQueryBody, errorHandler?: (error: any) => Promise<boolean>,): Promise<any> {
+    return await this.apiService.post(
+        `${this.apiConfigService.getGatewayUrl()}/vm-values/query`,
+        data,
+        new ApiSettings(),
+        errorHandler,
     );
   }
 

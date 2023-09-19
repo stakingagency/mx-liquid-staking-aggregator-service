@@ -1,6 +1,6 @@
 import * as process from "process";
 import BigNumber from 'bignumber.js';
-import { ApiConfigModule, ApiConfigService, DynamicModuleUtils } from "@libs/common";
+import {ApiConfigModule, ApiConfigService, DynamicModuleUtils, GatewayModule} from "@libs/common";
 import parseArgs from 'minimist';
 const request = require('supertest');
 import { Test } from '@nestjs/testing';
@@ -33,6 +33,7 @@ describe('Projects service testing', () => {
         const moduleRef = await Test.createTestingModule({
             imports: [
                 ApiConfigModule,
+                GatewayModule,
                 DynamicModuleUtils.getApiModule(),
                 DynamicModuleUtils.getElasticModule(),
             ],
